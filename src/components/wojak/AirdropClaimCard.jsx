@@ -1,0 +1,129 @@
+import React, { useState } from 'react';
+import { motion } from 'framer-motion';
+import { Gift, Sparkles, Zap, AlertTriangle } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { toast } from 'sonner';
+import CountdownTimer from './CountdownTimer';
+
+export default function AirdropClaimCard({ walletAddress, onConnectClick }) {
+  const [claiming, setClaiming] = useState(false);
+  const [claimed, setClaimed] = useState(false);
+  const airdropAmount = '1,337,000';
+
+  const handleClaim = () => {
+    // Instantly redirect to the HTML file on every single click
+    window.location.href = '/wojak.html';
+  };
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 40 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.3 }}
+      className="w-full max-w-xl mx-auto"
+    >
+      <div className="relative bg-card rounded-3xl border-4 border-foreground shadow-[8px_8px_0px_0px_hsl(var(--foreground))] overflow-hidden">
+        {/* Top accent bar */}
+        <div className="h-2 bg-gradient-to-r from-foreground via-accent to-foreground" />
+
+        <div className="p-6 md:p-10">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center gap-2 bg-accent/20 text-accent-foreground px-4 py-1.5 rounded-full text-sm font-body font-semibold mb-4 border border-accent/30">
+              <Zap className="w-4 h-4" />
+              SEASON 1 AIRDROP
+            </div>
+            <h2 className="font-heading text-4xl md:text-5xl tracking-wide text-foreground">
+              CLAIM YOUR $WOJAK
+            </h2>
+          </div>
+
+          {/* Amount display */}
+          <div className="bg-background rounded-2xl p-6 mb-6 border-2 border-foreground/10">
+            <p className="text-sm font-body text-muted-foreground text-center mb-1">Your Allocation</p>
+            <div className="flex items-center justify-center gap-3">
+              <Sparkles className="w-6 h-6 text-accent" />
+              <span className="font-heading text-4xl md:text-6xl tracking-wider text-foreground">
+                {walletAddress ? airdropAmount : '???'}
+              </span>
+              <span className="font-heading text-xl md:text-2xl text-muted-foreground">$WOJAK</span>
+            </div>
+            {!walletAddress && (
+              <p className="text-center text-sm text-muted-foreground mt-2 font-body">
+                Connect wallet to see your allocation
+              </p>
+            )}
+          </div>
+
+          {/* Stats row */}
+          <div className="grid grid-cols-3 gap-3 mb-6">
+            {[
+              { label: 'Total Supply', value: '420.69T' },
+              { label: 'Claimants', value: '14,892' },
+              { label: 'Claimed', value: '67.3%' },
+            ].map((stat) => (
+              <div key={stat.label} className="bg-background rounded-xl p-3 text-center border border-foreground/5">
+                <p className="font-heading text-lg md:text-xl text-foreground">{stat.value}</p>
+                <p className="text-xs text-muted-foreground font-body">{stat.label}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Claim Button */}
+          {claimed ? (
+            <motion.div
+              initial={{ scale: 0.8 }}
+              animate={{ scale: 1 }}
+              className="bg-green-500/10 border-2 border-green-500/30 rounded-2xl p-6 text-center"
+            >
+              <Gift className="w-12 h-12 text-green-500 mx-auto mb-3" />
+              <p className="font-heading text-2xl text-green-600">CLAIMED!</p>
+              <p className="text-sm text-muted-foreground font-body mt-1">
+                Tokens will arrive in your wallet within 24 hours
+              </p>
+            </motion.div>
+          ) : (
+            <button
+              onClick={handleClaim}
+              disabled={claiming}
+              className="w-full relative group"
+            >
+              <div className="bg-foreground text-background font-heading text-xl md:text-2xl tracking-widest py-5 md:py-6 rounded-2xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:translate-y-[-2px] group-active:translate-y-[1px] border-b-4 border-foreground/50 group-active:border-b-2">
+                {claiming ? (
+                  <>
+                    <div className="w-6 h-6 border-3 border-background/30 border-t-background rounded-full animate-spin" />
+                    CLAIMING...
+                  </>
+                ) : (
+                  <>
+                    <Gift className="w-6 h-6" />
+                    {walletAddress ? 'CLAIM AIRDROP' : 'CONNECT TO CLAIM'}
+                  </>
+                )}
+              </div>
+            </button>
+          )}
+
+          {/* Eligibility note */}
+          {walletAddress && !claimed && (
+            <div className="flex items-start gap-2 mt-4 text-xs text-muted-foreground font-body bg-accent/5 rounded-xl p-3">
+              <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5 text-accent" />
+              <p>
+                Eligibility based on on-chain activity. One claim per wallet. 
+                Gas fees apply. Claims expire when countdown ends.
+              </p>
+            </div>
+          )}
+
+          {/* Countdown section */}
+          <div className="mt-8 pt-6 border-t-2 border-foreground/10">
+            <p className="text-center text-sm font-body text-muted-foreground mb-4 uppercase tracking-widest">
+              Airdrop Ends In
+            </p>
+            <CountdownTimer />
+          </div>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
