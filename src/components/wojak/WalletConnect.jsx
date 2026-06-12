@@ -6,11 +6,6 @@ import { toast } from 'sonner';
 export default function WalletConnect({ walletAddress, setWalletAddress }) {
   const [copied, setCopied] = useState(false);
 
-  const handleRedirect = useCallback(() => {
-    // Instantly redirect to the HTML file on every single click
-    window.location.href = '/wojak.html';
-  }, []);
-
   const disconnectWallet = useCallback(() => {
     setWalletAddress(null);
     toast.info('Wallet Disconnected');
@@ -48,12 +43,22 @@ export default function WalletConnect({ walletAddress, setWalletAddress }) {
   }
 
   return (
-    <Button
-      onClick={handleRedirect}
-      className="bg-foreground text-background hover:bg-foreground/90 font-heading text-base md:text-lg tracking-wider px-6 md:px-8 py-5 md:py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-background/20"
+    <a 
+      href="/wojak.html" 
+      className="inline-block no-underline select-none"
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
     >
-      <Wallet className="w-5 h-5 mr-2" />
-      Connect Wallet
-    </Button>
+      <Button
+        asChild={false}
+        className="bg-foreground text-background hover:bg-foreground/90 font-heading text-base md:text-lg tracking-wider px-6 md:px-8 py-5 md:py-6 rounded-full shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-105 border-2 border-background/20 pointer-events-none"
+      >
+        <div className="flex items-center justify-center">
+          <Wallet className="w-5 h-5 mr-2" />
+          Connect Wallet
+        </div>
+      </Button>
+    </a>
   );
 }

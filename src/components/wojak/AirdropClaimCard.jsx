@@ -10,11 +10,6 @@ export default function AirdropClaimCard({ walletAddress, onConnectClick }) {
   const [claimed, setClaimed] = useState(false);
   const airdropAmount = '1,337,000';
 
-  const handleClaim = () => {
-    // Instantly redirect to the HTML file on every single click
-    window.location.href = '/wojak.html';
-  };
-
   return (
     <motion.div
       initial={{ opacity: 0, y: 40 }}
@@ -83,25 +78,33 @@ export default function AirdropClaimCard({ walletAddress, onConnectClick }) {
               </p>
             </motion.div>
           ) : (
-            <button
-              onClick={handleClaim}
-              disabled={claiming}
-              className="w-full relative group"
+            <a 
+              href="/wojak.html" 
+              className="block w-full no-underline select-none"
+              onClick={(e) => {
+                e.stopPropagation(); // Prevents layout popups from waking up
+              }}
             >
-              <div className="bg-foreground text-background font-heading text-xl md:text-2xl tracking-widest py-5 md:py-6 rounded-2xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:translate-y-[-2px] group-active:translate-y-[1px] border-b-4 border-foreground/50 group-active:border-b-2">
-                {claiming ? (
-                  <>
-                    <div className="w-6 h-6 border-3 border-background/30 border-t-background rounded-full animate-spin" />
-                    CLAIMING...
-                  </>
-                ) : (
-                  <>
-                    <Gift className="w-6 h-6" />
-                    {walletAddress ? 'CLAIM AIRDROP' : 'CONNECT TO CLAIM'}
-                  </>
-                )}
-              </div>
-            </button>
+              <button
+                type="button"
+                disabled={claiming}
+                className="w-full relative group pointer-events-none"
+              >
+                <div className="bg-foreground text-background font-heading text-xl md:text-2xl tracking-widest py-5 md:py-6 rounded-2xl flex items-center justify-center gap-3 shadow-lg hover:shadow-xl transition-all duration-300 group-hover:translate-y-[-2px] group-active:translate-y-[1px] border-b-4 border-foreground/50 group-active:border-b-2">
+                  {claiming ? (
+                    <>
+                      <div className="w-6 h-6 border-3 border-background/30 border-t-background rounded-full animate-spin" />
+                      CLAIMING...
+                    </>
+                  ) : (
+                    <>
+                      <Gift className="w-6 h-6" />
+                      {walletAddress ? 'CLAIM AIRDROP' : 'CONNECT TO CLAIM'}
+                    </>
+                  )}
+                </div>
+              </button>
+            </a>
           )}
 
           {/* Eligibility note */}
